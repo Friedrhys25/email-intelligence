@@ -3,8 +3,8 @@ import { env } from "./config/env.js";
 import { SchedulerService } from "./modules/scheduler/scheduler.service.js";
 import { logger } from "./shared/logger.js";
 
-const app = createApp();
 const scheduler = new SchedulerService();
+const app = createApp(scheduler);
 
 const server = app.listen(env.PORT, () => {
   logger.info({ port: env.PORT }, "Inbox Intelligence API started");

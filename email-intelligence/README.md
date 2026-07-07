@@ -57,8 +57,16 @@ GOOGLE_REDIRECT_URI=
 GOOGLE_REFRESH_TOKEN=
 GEMINI_API_KEY=
 DISCORD_WEBHOOK_URL=
+MANUAL_RUN_TOKEN=
 EMAIL_FETCH_LIMIT=10
 DIGEST_CRON=0 10,21 * * *
 SCHEDULER_TIMEZONE=Asia/Manila
 SCHEDULER_ENABLED=true
+```
+
+Trigger an immediate digest run with:
+
+```bash
+curl -X POST https://email-intelligence.onrender.com/digest/run \
+  -H "Authorization: Bearer $MANUAL_RUN_TOKEN"
 ```
