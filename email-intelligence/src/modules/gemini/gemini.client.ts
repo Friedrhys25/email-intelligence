@@ -52,8 +52,10 @@ export class GeminiRestClient implements GeminiClient {
     });
 
     if (!response.ok) {
+      const errorBody = await response.text();
+
       throw new AppError(
-        `Gemini API request failed with status ${String(response.status)}`,
+        `Gemini API request failed with status ${String(response.status)} for model ${this.config.model}: ${errorBody.slice(0, 300)}`,
         response.status
       );
     }
