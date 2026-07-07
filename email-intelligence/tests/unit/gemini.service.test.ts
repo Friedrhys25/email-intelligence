@@ -76,6 +76,42 @@ describe("GeminiService", () => {
     });
   });
 
+  it("fills optional summary fields when Gemini omits them", async () => {
+    const geminiClient: GeminiClient = {
+      generateContent: vi.fn(() =>
+        Promise.resolve(
+          JSON.stringify({
+            summaries: [
+              {
+                emailId: "message-1",
+                sender: "GitHub <noreply@github.com>",
+                subject: "Security alert",
+                summary: "A dependency needs review."
+              }
+            ]
+          })
+        )
+      )
+    };
+    const service = new GeminiService(undefined, geminiClient);
+
+    await expect(service.summarize(createPrompt())).resolves.toEqual({
+      summaries: [
+        {
+          emailId: "message-1",
+          priority: "medium",
+          sender: "GitHub <noreply@github.com>",
+          subject: "Security alert",
+          summary: "A dependency needs review.",
+          reason: null,
+          actionRequired: false,
+          deadline: null,
+          confidence: 0.5
+        }
+      ]
+    });
+  });
+
   it("rejects invalid Gemini responses", async () => {
     const geminiClient: GeminiClient = {
       generateContent: vi.fn(() =>
@@ -84,10 +120,15 @@ describe("GeminiService", () => {
     };
     const service = new GeminiService(undefined, geminiClient);
 
-    await expect(service.summarize(createPrompt())).rejects.toMatchObject({
-      message: "Gemini returned an invalid summary response",
-      statusCode: 502
-    } satisfies Partial<AppError>);
+    try {
+      await service.summarize(createPrompt());
+      throw new Error("Expected Gemini summary validation to fail");
+    } catch (error) {
+      expect(error).toBeInstanceOf(AppError);
+      const appError = error as AppError;
+      expect(appError.message).toContain("Gemini returned an invalid summary response");
+      expect(appError.statusCode).toBe(502);
+    }
   });
 
   it("retries transient Gemini failures", async () => {
