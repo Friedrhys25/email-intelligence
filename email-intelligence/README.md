@@ -45,7 +45,7 @@ Keep `SCHEDULER_ENABLED=false` when you only want to test routes manually.
 
 ## Deployment
 
-The repository root includes `render.yaml` for Render Blueprint deployment. It points Render to the `email-intelligence` subfolder, runs `npm install --no-audit --no-fund && npm run build`, starts with `npm start`, and uses `/health` as the health check path.
+The repository root includes `render.yaml` for Render Blueprint deployment. It points Render to the `email-intelligence` subfolder, runs `npm install --include=dev --no-audit --no-fund && npm run build`, starts with `npm start`, and uses `/health` as the health check path.
 
 Production requires these Render environment variables:
 
