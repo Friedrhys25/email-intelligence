@@ -18,7 +18,7 @@ Deploy Inbox Intelligence so the digest can run automatically without a local ma
 1. Push code to GitHub.
 2. Create a new Render web service from the repo.
 3. Set root directory to `email-intelligence`.
-4. Set build command to `npm ci && npm run build`.
+4. Set build command to `npm install --no-audit --no-fund && npm run build`.
 5. Set start command to `npm start`.
 6. Add environment variables, including `SCHEDULER_ENABLED=true`.
 7. Configure health check path as `/health`.

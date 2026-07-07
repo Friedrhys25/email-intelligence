@@ -6,7 +6,7 @@ Use a Render web service if the app exposes Express routes and an internal sched
 
 ## Build
 
-- Build command: `npm ci && npm run build`
+- Build command: `npm install --no-audit --no-fund && npm run build`
 - Start command: `npm start`
 - Health check path: `/health`
 - Root directory: `email-intelligence`
@@ -34,7 +34,7 @@ If deploying with the included Render Blueprint, use `render.yaml` from the repo
 1. Push the repository to GitHub.
 2. Create a Render web service from the repository.
 3. Set root directory to `email-intelligence`.
-4. Set build command to `npm ci && npm run build` and start command to `npm start`.
+4. Set build command to `npm install --no-audit --no-fund && npm run build` and start command to `npm start`.
 5. Add all environment variables.
 6. Configure `/health` as the health check path.
 7. Deploy.
