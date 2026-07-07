@@ -29,22 +29,26 @@ describe("DigestFormatterService", () => {
       ]
     });
 
-    expect(digest).toContain("# Inbox Intelligence");
-    expect(digest.indexOf("## High Priority")).toBeLessThan(digest.indexOf("## Medium Priority"));
-    expect(digest.indexOf("## Medium Priority")).toBeLessThan(digest.indexOf("## Low Priority"));
-    expect(digest).toContain("### Security alert");
-    expect(digest).toContain("Email sender: GitHub <noreply@github.com>");
-    expect(digest).toContain("Title: Security alert");
-    expect(digest).toContain("Reason: Dependency vulnerability detected.");
-    expect(digest).toContain("Action Required: Yes");
-    expect(digest).toContain("Deadline: tomorrow");
+    expect(digest).toContain("# 📬 Inbox Intelligence");
+    expect(digest.indexOf("## 🔴 High Priority")).toBeLessThan(
+      digest.indexOf("## 🟡 Medium Priority")
+    );
+    expect(digest.indexOf("## 🟡 Medium Priority")).toBeLessThan(
+      digest.indexOf("## 🟢 Low Priority")
+    );
+    expect(digest).toContain("### ✉️ Security alert");
+    expect(digest).toContain("👤 **Email sender:** GitHub <noreply@github.com>");
+    expect(digest).toContain("🏷️ **Title:** Security alert");
+    expect(digest).toContain("📌 **Reason:** Dependency vulnerability detected.");
+    expect(digest).toContain("✅ **Action Required:** Yes");
+    expect(digest).toContain("⏰ **Deadline:** tomorrow");
   });
 
   it("formats a useful empty digest", () => {
     const service = new DigestFormatterService();
 
     expect(service.format({ summaries: [] })).toBe(
-      "# Inbox Intelligence\n\nNo important emails found for this digest."
+      "# 📬 Inbox Intelligence\n\nNo important emails found for this digest."
     );
   });
 
@@ -54,8 +58,8 @@ describe("DigestFormatterService", () => {
       summaries: [createSummary({ deadline: null, actionRequired: false })]
     });
 
-    expect(digest).toContain("Action Required: No");
-    expect(digest).toContain("Deadline: Not specified");
+    expect(digest).toContain("✅ **Action Required:** No");
+    expect(digest).toContain("⏰ **Deadline:** Not specified");
   });
 
   it("falls back to the summary when reason is missing", () => {
@@ -64,7 +68,7 @@ describe("DigestFormatterService", () => {
       summaries: [createSummary({ reason: null })]
     });
 
-    expect(digest).toContain("Reason: A dependency vulnerability needs attention.");
+    expect(digest).toContain("📌 **Reason:** A dependency vulnerability needs attention.");
   });
 
   it("trims output to the configured Discord message limit", () => {

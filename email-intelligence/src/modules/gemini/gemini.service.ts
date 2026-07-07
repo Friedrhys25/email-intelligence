@@ -3,7 +3,7 @@ import { z } from "zod";
 import { AppError } from "../../shared/errors.js";
 import { logger } from "../../shared/logger.js";
 import { retry } from "../../shared/retry.js";
-import type { BuiltPrompt } from "../prompt-builder/prompt.types.js";
+import type { BuiltPrompt, PromptEmailInput } from "../prompt-builder/prompt.types.js";
 import { GeminiRestClient, type GeminiClient } from "./gemini.client.js";
 import { summaryResponseSchema, type SummaryResponse } from "./summary.schema.js";
 
@@ -42,7 +42,7 @@ export class GeminiService {
       shouldRetry: isRetryableError
     });
 
-    return this.parseAndValidate(responseText);
+    return this.parseAndValidate(responseText, prompt);
   }
 
   private getClient(): GeminiClient {
@@ -61,7 +61,7 @@ export class GeminiService {
     return this.geminiClient;
   }
 
-  private parseAndValidate(responseText: string): SummaryResponse {
+  private parseAndValidate(responseText: string, prompt: BuiltPrompt): SummaryResponse {
     try {
       const parsedResponse = JSON.parse(stripJsonCodeFence(responseText)) as unknown;
       return summaryResponseSchema.parse(parsedResponse);
@@ -81,12 +81,82 @@ export class GeminiService {
         "Gemini returned an invalid summary response"
       );
 
+      const fallbackResponse = buildFallbackSummaryResponse(prompt);
+
+      if (fallbackResponse.summaries.length > 0) {
+        return fallbackResponse;
+      }
+
       throw new AppError(`Gemini returned an invalid summary response: ${details}`, 502, true, {
         cause: error
       });
     }
   }
 }
+
+const buildFallbackSummaryResponse = (prompt: BuiltPrompt): SummaryResponse => {
+  const promptEmails = extractPromptEmails(prompt.userPrompt);
+
+  return {
+    summaries: promptEmails.map((email) => ({
+      emailId: email.id,
+      priority: email.priority,
+      sender: email.sender,
+      subject: email.subject,
+      summary: buildFallbackSummary(email),
+      reason: email.reasonIncluded || email.snippet || "Included by email priority rules.",
+      actionRequired: email.actionRequired,
+      deadline: email.deadline ?? null,
+      confidence: 0.5
+    }))
+  };
+};
+
+const extractPromptEmails = (userPrompt: string): PromptEmailInput[] => {
+  const jsonStart = userPrompt.indexOf("[");
+  const schemaStart = userPrompt.indexOf("\n\nReturn valid JSON", jsonStart);
+
+  if (jsonStart === -1 || schemaStart === -1) {
+    return [];
+  }
+
+  try {
+    const parsedEmails = JSON.parse(userPrompt.slice(jsonStart, schemaStart)) as unknown;
+    return z.array(promptEmailInputSchema).parse(parsedEmails);
+  } catch {
+    return [];
+  }
+};
+
+const buildFallbackSummary = (email: PromptEmailInput): string => {
+  const sourceText = email.snippet || email.bodyExcerpt || "No email preview was available.";
+  return sourceText.length <= 180 ? sourceText : `${sourceText.slice(0, 180).trimEnd()}...`;
+};
+
+const promptEmailInputSchema = z.object({
+  id: z.string().min(1),
+  sender: z.string(),
+  subject: z.string(),
+  date: z.string(),
+  snippet: z.string(),
+  bodyExcerpt: z.string(),
+  priority: z.enum(["high", "medium", "low"]),
+  category: z.enum([
+    "action",
+    "deadline",
+    "important-contact",
+    "normal",
+    "newsletter",
+    "otp",
+    "promotion",
+    "receipt",
+    "spam"
+  ]),
+  actionRequired: z.boolean(),
+  deadline: z.string().optional(),
+  importantContact: z.boolean(),
+  reasonIncluded: z.string()
+});
 
 const stripJsonCodeFence = (value: string): string =>
   value

@@ -7,9 +7,9 @@ export interface DigestFormatterConfig {
 const priorityOrder: EmailSummary["priority"][] = ["high", "medium", "low"];
 
 const priorityHeadings: Record<EmailSummary["priority"], string> = {
-  high: "High Priority",
-  medium: "Medium Priority",
-  low: "Low Priority"
+  high: "🔴 High Priority",
+  medium: "🟡 Medium Priority",
+  low: "🟢 Low Priority"
 };
 
 export class DigestFormatterService {
@@ -29,7 +29,7 @@ export class DigestFormatterService {
   }
 
   private formatEmptyDigest(): string {
-    return ["# Inbox Intelligence", "", "No important emails found for this digest."].join("\n");
+    return ["# 📬 Inbox Intelligence", "", "No important emails found for this digest."].join("\n");
   }
 
   private formatSummaries(summaries: EmailSummary[]): string {
@@ -37,7 +37,7 @@ export class DigestFormatterService {
       .map((priority) => this.formatPrioritySection(priority, summaries))
       .filter((section) => section.length > 0);
 
-    return ["# Inbox Intelligence", "", ...sections].join("\n\n");
+    return ["# 📬 Inbox Intelligence", "", ...sections].join("\n\n");
   }
 
   private formatPrioritySection(
@@ -63,14 +63,16 @@ export class DigestFormatterService {
     const reasonText = summary.reason ?? summary.summary;
 
     return [
-      `### ${sanitizeMarkdown(summary.subject)}`,
-      `Email sender: ${sanitizeMarkdown(summary.sender)}`,
-      `Title: ${sanitizeMarkdown(summary.subject)}`,
-      `Reason: ${sanitizeMarkdown(reasonText)}`,
-      `Summary: ${sanitizeMarkdown(summary.summary)}`,
-      `Action Required: ${actionText}`,
-      `Deadline: ${sanitizeMarkdown(deadlineText)}`,
-      `Confidence: ${String(Math.round(summary.confidence * 100))}%`
+      `### ✉️ ${sanitizeMarkdown(summary.subject)}`,
+      "",
+      `👤 **Email sender:** ${sanitizeMarkdown(summary.sender)}`,
+      `🏷️ **Title:** ${sanitizeMarkdown(summary.subject)}`,
+      `📌 **Reason:** ${sanitizeMarkdown(reasonText)}`,
+      "",
+      `📝 **Summary:** ${sanitizeMarkdown(summary.summary)}`,
+      `✅ **Action Required:** ${actionText}`,
+      `⏰ **Deadline:** ${sanitizeMarkdown(deadlineText)}`,
+      `📊 **Confidence:** ${String(Math.round(summary.confidence * 100))}%`
     ].join("\n");
   }
 

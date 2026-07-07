@@ -3,6 +3,8 @@ import { AppError } from "../../src/shared/errors.js";
 import type { BuiltPrompt } from "../../src/modules/prompt-builder/prompt.types.js";
 import { GeminiService } from "../../src/modules/gemini/gemini.service.js";
 import type { GeminiClient } from "../../src/modules/gemini/gemini.client.js";
+import { PromptBuilderService } from "../../src/modules/prompt-builder/prompt-builder.service.js";
+import type { ProcessedEmail } from "../../src/modules/email-processor/priority.types.js";
 
 const createPrompt = (overrides: Partial<BuiltPrompt> = {}): BuiltPrompt => ({
   systemPrompt: "system",
@@ -27,6 +29,26 @@ const validGeminiResponse = JSON.stringify({
     }
   ]
 });
+
+const processedEmail: ProcessedEmail = {
+  email: {
+    id: "message-1",
+    threadId: "thread-1",
+    sender: "GitHub <noreply@github.com>",
+    subject: "Security alert",
+    date: "2026-07-04T07:00:00.000Z",
+    snippet: "A dependency vulnerability was detected.",
+    body: "Please review and fix the dependency by tomorrow.",
+    labels: ["INBOX"]
+  },
+  priority: "high",
+  category: "deadline",
+  actionRequired: true,
+  deadline: "tomorrow",
+  importantContact: true,
+  reasonIncluded: "deadline detected: tomorrow",
+  score: 8
+};
 
 describe("GeminiService", () => {
   it("returns an empty summary response when there are no emails", async () => {
@@ -106,6 +128,34 @@ describe("GeminiService", () => {
           reason: null,
           actionRequired: false,
           deadline: null,
+          confidence: 0.5
+        }
+      ]
+    });
+  });
+
+  it("falls back to processed email data when Gemini returns malformed JSON", async () => {
+    const geminiClient: GeminiClient = {
+      generateContent: vi.fn(() =>
+        Promise.resolve(
+          '{"summaries":[{"emailId":"message-1","sender":"GitHub <noreply@github.com>" "subject":"Security alert"}]}'
+        )
+      )
+    };
+    const prompt = new PromptBuilderService().build([processedEmail]);
+    const service = new GeminiService(undefined, geminiClient);
+
+    await expect(service.summarize(prompt)).resolves.toEqual({
+      summaries: [
+        {
+          emailId: "message-1",
+          priority: "high",
+          sender: "GitHub <noreply@github.com>",
+          subject: "Security alert",
+          summary: "A dependency vulnerability was detected.",
+          reason: "deadline detected: tomorrow",
+          actionRequired: true,
+          deadline: "tomorrow",
           confidence: 0.5
         }
       ]
