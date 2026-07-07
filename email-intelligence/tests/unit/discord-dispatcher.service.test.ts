@@ -1,7 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { AppError } from "../../src/shared/errors.js";
 import { DiscordDispatcherService } from "../../src/modules/dispatcher/discord-dispatcher.service.js";
-import type { DiscordDispatcherClient } from "../../src/modules/dispatcher/discord-dispatcher.client.js";
+import {
+  DiscordWebhookError,
+  type DiscordDispatcherClient
+} from "../../src/modules/dispatcher/discord-dispatcher.client.js";
 
 const testWebhookUrl = "https://discord.com/api/webhooks/test";
 
@@ -71,6 +74,31 @@ describe("DiscordDispatcherService", () => {
     const send = vi
       .fn<DiscordDispatcherClient["send"]>()
       .mockRejectedValueOnce(new AppError("rate limited", 429))
+      .mockResolvedValueOnce({ statusCode: 204 });
+    const service = createService({ send }, testWebhookUrl);
+
+    await expect(
+      service.dispatch({
+        markdown: "# Inbox Intelligence",
+        correlationId: "run-1"
+      })
+    ).resolves.toMatchObject({
+      status: "sent",
+      statusCode: 204
+    });
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+
+  it("retries Discord rate limits with retry-after metadata", async () => {
+    const send = vi
+      .fn<DiscordDispatcherClient["send"]>()
+      .mockRejectedValueOnce(
+        new DiscordWebhookError(
+          "Discord webhook request failed with status 429; retryAfterMs: 1",
+          429,
+          1
+        )
+      )
       .mockResolvedValueOnce({ statusCode: 204 });
     const service = createService({ send }, testWebhookUrl);
 

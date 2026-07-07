@@ -2,7 +2,11 @@ import { env } from "../../config/env.js";
 import { AppError } from "../../shared/errors.js";
 import { logger } from "../../shared/logger.js";
 import { retry } from "../../shared/retry.js";
-import { DiscordWebhookClient, type DiscordDispatcherClient } from "./discord-dispatcher.client.js";
+import {
+  DiscordWebhookClient,
+  DiscordWebhookError,
+  type DiscordDispatcherClient
+} from "./discord-dispatcher.client.js";
 import type {
   DeliveryResult,
   DiscordDispatcherConfig,
@@ -52,7 +56,8 @@ export class DiscordDispatcherService {
         {
           attempts: this.config.retryAttempts,
           delayMs: this.config.retryDelayMs,
-          shouldRetry: isRetryableError
+          shouldRetry: isRetryableError,
+          getDelayMs: getDiscordRetryDelayMs
         }
       );
 
@@ -98,4 +103,12 @@ const isRetryableError = (error: unknown): boolean => {
   }
 
   return error.statusCode === 408 || error.statusCode === 429 || error.statusCode >= 500;
+};
+
+const getDiscordRetryDelayMs = (error: unknown): number | undefined => {
+  if (error instanceof DiscordWebhookError && error.retryAfterMs) {
+    return error.retryAfterMs;
+  }
+
+  return undefined;
 };
