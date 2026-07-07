@@ -27,6 +27,8 @@ npm run lint
 npm run format:check
 ```
 
+Use Node.js 22 LTS locally and in production. Render reads this from `package.json`.
+
 ## Environment
 
 Copy `.env.example` to `.env` for local development.

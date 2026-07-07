@@ -10,6 +10,7 @@ Use a Render web service if the app exposes Express routes and an internal sched
 - Start command: `npm start`
 - Health check path: `/health`
 - Root directory: `email-intelligence`
+- Node version: `22.x` from `email-intelligence/package.json`
 
 If deploying with the included Render Blueprint, use `render.yaml` from the repository root. It configures the root directory, build command, start command, health check path, and non-secret defaults.
 
