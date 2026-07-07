@@ -11,6 +11,7 @@ const createSummary = (overrides: Partial<EmailSummary> = {}): EmailSummary => (
   sender: "GitHub <noreply@github.com>",
   subject: "Security alert",
   summary: "A dependency vulnerability needs attention.",
+  reason: "Dependency vulnerability detected.",
   actionRequired: true,
   deadline: "tomorrow",
   confidence: 0.91,
@@ -31,7 +32,10 @@ describe("DigestFormatterService", () => {
     expect(digest).toContain("# Inbox Intelligence");
     expect(digest.indexOf("## High Priority")).toBeLessThan(digest.indexOf("## Medium Priority"));
     expect(digest.indexOf("## Medium Priority")).toBeLessThan(digest.indexOf("## Low Priority"));
-    expect(digest).toContain("### GitHub <noreply@github.com> - Security alert");
+    expect(digest).toContain("### Security alert");
+    expect(digest).toContain("Email sender: GitHub <noreply@github.com>");
+    expect(digest).toContain("Title: Security alert");
+    expect(digest).toContain("Reason: Dependency vulnerability detected.");
     expect(digest).toContain("Action Required: Yes");
     expect(digest).toContain("Deadline: tomorrow");
   });
@@ -52,6 +56,15 @@ describe("DigestFormatterService", () => {
 
     expect(digest).toContain("Action Required: No");
     expect(digest).toContain("Deadline: Not specified");
+  });
+
+  it("falls back to the summary when reason is missing", () => {
+    const service = new DigestFormatterService();
+    const digest = service.format({
+      summaries: [createSummary({ reason: null })]
+    });
+
+    expect(digest).toContain("Reason: A dependency vulnerability needs attention.");
   });
 
   it("trims output to the configured Discord message limit", () => {

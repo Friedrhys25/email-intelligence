@@ -32,7 +32,7 @@ Convert normalized emails into a filtered, prioritized set of messages worth sum
 
 ## Acceptance Criteria
 
-- Default run can process the latest five emails.
+- Default run can process the latest ten unread emails.
 - Filtering is deterministic and testable.
 - Rules can be adjusted without changing Gmail or Gemini modules.
 - A malformed email does not stop the full batch.

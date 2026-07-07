@@ -6,11 +6,15 @@ export class NodeCronScheduler implements CronScheduler {
     return cron.validate(cronExpression);
   }
 
-  public schedule(cronExpression: string, task: () => void | Promise<void>): ScheduledTaskHandle {
+  public schedule(
+    cronExpression: string,
+    task: () => void | Promise<void>,
+    timezone: string
+  ): ScheduledTaskHandle {
     return cron.schedule(cronExpression, task, {
       noOverlap: true,
       name: "inbox-intelligence-digest",
-      timezone: "UTC"
+      timezone
     });
   }
 }

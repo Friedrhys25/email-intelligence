@@ -5,6 +5,8 @@ import type { EmailDTO, GmailMessageReference } from "./email.dto.js";
 import { GmailRestClient, type GmailClient } from "./gmail.client.js";
 import { mapGmailMessageToEmailDTO } from "./gmail.mapper.js";
 
+const unreadInboxQuery = "in:inbox is:unread";
+
 export interface AccessTokenProvider {
   refreshAccessToken(): Promise<{ accessToken: string }>;
 }
@@ -17,7 +19,11 @@ export class GmailService {
 
   public async fetchLatestEmails(limit = env.EMAIL_FETCH_LIMIT): Promise<EmailDTO[]> {
     const { accessToken } = await this.accessTokenProvider.refreshAccessToken();
-    const messageList = await this.gmailClient.listLatestMessages(accessToken, limit);
+    const messageList = await this.gmailClient.listLatestMessages(
+      accessToken,
+      limit,
+      unreadInboxQuery
+    );
     const messageReferences = this.getValidMessageReferences(messageList.messages ?? []);
 
     const settledMessages = await Promise.allSettled(

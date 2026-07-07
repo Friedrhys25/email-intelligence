@@ -47,6 +47,7 @@ describe("PromptBuilderService", () => {
     expect(prompt.userPrompt).toContain('"actionRequired": true');
     expect(prompt.userPrompt).toContain('"deadline": "tomorrow"');
     expect(prompt.responseSchema).toContain('"summaries"');
+    expect(prompt.responseSchema).toContain('"reason"');
     expect(prompt.responseSchema).toContain('"confidence"');
   });
 

@@ -2,16 +2,23 @@ import { AppError } from "../../shared/errors.js";
 import type { GmailMessage, GmailMessageList } from "./email.dto.js";
 
 export interface GmailClient {
-  listLatestMessages(accessToken: string, limit: number): Promise<GmailMessageList>;
+  listLatestMessages(accessToken: string, limit: number, query?: string): Promise<GmailMessageList>;
   getMessage(accessToken: string, messageId: string): Promise<GmailMessage>;
 }
 
 export class GmailRestClient implements GmailClient {
   private readonly baseUrl = "https://gmail.googleapis.com/gmail/v1/users/me";
 
-  public async listLatestMessages(accessToken: string, limit: number): Promise<GmailMessageList> {
+  public async listLatestMessages(
+    accessToken: string,
+    limit: number,
+    query?: string
+  ): Promise<GmailMessageList> {
     const url = new URL(`${this.baseUrl}/messages`);
     url.searchParams.set("maxResults", String(limit));
+    if (query) {
+      url.searchParams.set("q", query);
+    }
 
     return await this.request<GmailMessageList>(accessToken, url);
   }

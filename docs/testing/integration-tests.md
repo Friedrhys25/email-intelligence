@@ -27,7 +27,7 @@
 
 ## Full Digest Flow
 
-- Mock Gmail to return five emails.
+- Mock Gmail to return ten unread emails.
 - Mock processor to include important messages.
 - Mock Gemini to return summaries.
 - Mock dispatcher to accept Markdown.

@@ -29,14 +29,14 @@ describe("GmailService", () => {
 
     const service = new GmailService(accessTokenProvider, gmailClient);
 
-    await expect(service.fetchLatestEmails(5)).resolves.toMatchObject([
+    await expect(service.fetchLatestEmails(10)).resolves.toMatchObject([
       {
         id: "message-1",
         subject: "Hello",
         snippet: "Snippet"
       }
     ]);
-    expect(listLatestMessages).toHaveBeenCalledWith("access-token", 5);
+    expect(listLatestMessages).toHaveBeenCalledWith("access-token", 10, "in:inbox is:unread");
     expect(getMessage).toHaveBeenCalledWith("access-token", "message-1");
   });
 
@@ -65,6 +65,6 @@ describe("GmailService", () => {
 
     const service = new GmailService(accessTokenProvider, gmailClient);
 
-    await expect(service.fetchLatestEmails(5)).resolves.toHaveLength(1);
+    await expect(service.fetchLatestEmails(10)).resolves.toHaveLength(1);
   });
 });

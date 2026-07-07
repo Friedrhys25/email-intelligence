@@ -37,7 +37,8 @@ describe("SchedulerService", () => {
       cronScheduler,
       {
         cronExpression: "*/30 * * * *",
-        enabled: false
+        enabled: false,
+        timezone: "Asia/Manila"
       }
     );
 
@@ -55,7 +56,8 @@ describe("SchedulerService", () => {
       cronScheduler,
       {
         cronExpression: "invalid",
-        enabled: true
+        enabled: true,
+        timezone: "Asia/Manila"
       }
     );
 
@@ -72,13 +74,14 @@ describe("SchedulerService", () => {
       { runDigest: vi.fn(() => Promise.resolve(digestRunResult)) },
       cronScheduler,
       {
-        cronExpression: "*/30 * * * *",
-        enabled: true
+        cronExpression: "0 10,21 * * *",
+        enabled: true,
+        timezone: "Asia/Manila"
       }
     );
 
     expect(service.start()).toBeDefined();
-    expect(schedule).toHaveBeenCalledWith("*/30 * * * *", expect.any(Function));
+    expect(schedule).toHaveBeenCalledWith("0 10,21 * * *", expect.any(Function), "Asia/Manila");
   });
 
   it("executes the orchestrator", async () => {
@@ -94,7 +97,8 @@ describe("SchedulerService", () => {
       },
       {
         cronExpression: "*/30 * * * *",
-        enabled: true
+        enabled: true,
+        timezone: "Asia/Manila"
       }
     );
 
@@ -123,7 +127,8 @@ describe("SchedulerService", () => {
       },
       {
         cronExpression: "*/30 * * * *",
-        enabled: true
+        enabled: true,
+        timezone: "Asia/Manila"
       }
     );
 
@@ -153,7 +158,8 @@ describe("SchedulerService", () => {
       },
       {
         cronExpression: "*/30 * * * *",
-        enabled: true
+        enabled: true,
+        timezone: "Asia/Manila"
       }
     );
 

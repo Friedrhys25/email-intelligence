@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: inbox-intelligence
+    runtime: node
+    rootDir: email-intelligence
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: EMAIL_FETCH_LIMIT
+        value: 10
+      - key: DIGEST_CRON
+        value: "0 10,21 * * *"
+      - key: SCHEDULER_TIMEZONE
+        value: Asia/Manila
+      - key: SCHEDULER_ENABLED
+        value: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
+      - key: GOOGLE_REFRESH_TOKEN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DISCORD_WEBHOOK_URL
+        sync: false

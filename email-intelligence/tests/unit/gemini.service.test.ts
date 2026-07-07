@@ -20,6 +20,7 @@ const validGeminiResponse = JSON.stringify({
       sender: "GitHub <noreply@github.com>",
       subject: "Security alert",
       summary: "A dependency needs review.",
+      reason: "Dependency review is required.",
       actionRequired: true,
       deadline: "tomorrow",
       confidence: 0.91
@@ -55,6 +56,7 @@ describe("GeminiService", () => {
           sender: "GitHub <noreply@github.com>",
           subject: "Security alert",
           summary: "A dependency needs review.",
+          reason: "Dependency review is required.",
           actionRequired: true,
           deadline: "tomorrow",
           confidence: 0.91

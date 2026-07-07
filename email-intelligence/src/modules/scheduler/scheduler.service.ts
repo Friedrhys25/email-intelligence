@@ -19,7 +19,8 @@ export class SchedulerService {
     private readonly cronScheduler: CronScheduler = new NodeCronScheduler(),
     private readonly config: SchedulerConfig = {
       cronExpression: env.DIGEST_CRON,
-      enabled: env.SCHEDULER_ENABLED
+      enabled: env.SCHEDULER_ENABLED,
+      timezone: env.SCHEDULER_TIMEZONE
     }
   ) {}
 
@@ -33,11 +34,18 @@ export class SchedulerService {
       throw new Error(`Invalid DIGEST_CRON expression: ${this.config.cronExpression}`);
     }
 
-    this.scheduledTask = this.cronScheduler.schedule(this.config.cronExpression, async () => {
-      await this.executeScheduledRun();
-    });
+    this.scheduledTask = this.cronScheduler.schedule(
+      this.config.cronExpression,
+      async () => {
+        await this.executeScheduledRun();
+      },
+      this.config.timezone
+    );
 
-    logger.info({ cronExpression: this.config.cronExpression }, "Digest scheduler started");
+    logger.info(
+      { cronExpression: this.config.cronExpression, timezone: this.config.timezone },
+      "Digest scheduler started"
+    );
 
     return this.scheduledTask;
   }

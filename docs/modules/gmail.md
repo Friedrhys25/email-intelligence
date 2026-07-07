@@ -7,7 +7,7 @@ Fetch recent Gmail messages and normalize them for processing.
 ## Responsibilities
 
 - Use authenticated Google credentials.
-- Fetch the latest messages, defaulting to five.
+- Fetch the latest unread messages, defaulting to ten.
 - Support configurable limits.
 - Read sender, subject, date, snippet, and body when required.
 - Normalize provider responses into EmailDTO objects.
@@ -33,7 +33,7 @@ Fetch recent Gmail messages and normalize them for processing.
 
 ## Flow
 
-1. Request recent Gmail message IDs.
+1. Request unread recent Gmail message IDs.
 2. Fetch message details.
 3. Decode headers and body.
 4. Normalize into EmailDTO.
@@ -41,7 +41,7 @@ Fetch recent Gmail messages and normalize them for processing.
 
 ## Acceptance Criteria
 
-- Defaults to latest five emails.
+- Defaults to latest ten unread emails.
 - Supports a configurable limit.
 - Handles missing headers.
 - Does not leak Gmail credentials.

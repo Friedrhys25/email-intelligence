@@ -18,7 +18,7 @@ Enable Inbox Intelligence to read recent Gmail messages through the Gmail API.
 3. Confirm callback receives tokens.
 4. Store the refresh token securely.
 5. Use the refresh token to create an authorized Gmail client.
-6. Fetch recent message IDs with a default limit of `5`.
+6. Fetch unread recent message IDs with a default limit of `10`.
 7. Fetch message details and normalize into EmailDTO.
 
 ## Common Errors
@@ -31,7 +31,7 @@ Enable Inbox Intelligence to read recent Gmail messages through the Gmail API.
 ## Checklist
 
 - Read-only scope is used.
-- Latest five emails can be fetched.
+- Latest ten unread emails can be fetched.
 - EmailDTO mapping works.
 - Missing headers are handled.
 - Sensitive email content is not logged by default.

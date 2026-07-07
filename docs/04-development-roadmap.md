@@ -20,7 +20,7 @@
 
 ## Phase 4: Gmail Integration
 
-- Fetch the latest five messages by default.
+- Fetch the latest ten unread messages by default.
 - Support configurable fetch limits.
 - Normalize sender, subject, date, snippet, and body into EmailDTO objects.
 

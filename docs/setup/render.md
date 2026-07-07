@@ -11,18 +11,20 @@ Deploy Inbox Intelligence so the digest can run automatically without a local ma
 - Build and start scripts.
 - `/health` endpoint.
 - Production environment variables.
+- `render.yaml` in the repository root, if using Render Blueprint deployment.
 
 ## Step-by-step
 
 1. Push code to GitHub.
 2. Create a new Render web service from the repo.
-3. Set build command to `npm install && npm run build`.
-4. Set start command to `npm start`.
-5. Add environment variables.
-6. Configure health check path as `/health`.
-7. Deploy.
-8. Check logs for startup and scheduler registration.
-9. Verify Discord receives a digest.
+3. Set root directory to `email-intelligence`.
+4. Set build command to `npm ci && npm run build`.
+5. Set start command to `npm start`.
+6. Add environment variables, including `SCHEDULER_ENABLED=true`.
+7. Configure health check path as `/health`.
+8. Deploy.
+9. Check logs for startup and scheduler registration.
+10. Verify Discord receives a digest after the next scheduled run.
 
 ## Common Errors
 

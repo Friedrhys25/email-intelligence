@@ -6,6 +6,7 @@ export const emailSummarySchema = z.object({
   sender: z.string(),
   subject: z.string(),
   summary: z.string().min(1),
+  reason: z.string().nullable(),
   actionRequired: z.boolean(),
   deadline: z.string().nullable(),
   confidence: z.number().min(0).max(1)

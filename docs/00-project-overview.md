@@ -11,7 +11,7 @@ Build a lightweight executive-assistant workflow where the user reads one AI-gen
 ## Goals
 
 - Connect securely to Gmail with Google OAuth2.
-- Fetch the latest emails, defaulting to five messages per run.
+- Fetch the latest unread emails, defaulting to ten messages per run.
 - Filter out low-value messages such as promotions, OTPs, newsletters, receipts, and spam.
 - Classify priority, action requirements, deadlines, and important contacts.
 - Generate concise Gemini summaries.

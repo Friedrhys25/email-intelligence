@@ -103,8 +103,9 @@ describe("loadAuthConfig", () => {
         NODE_ENV: "development",
         PORT: 3000,
         LOG_LEVEL: "info",
-        EMAIL_FETCH_LIMIT: 5,
-        DIGEST_CRON: "*/30 * * * *",
+        EMAIL_FETCH_LIMIT: 10,
+        DIGEST_CRON: "0 10,21 * * *",
+        SCHEDULER_TIMEZONE: "Asia/Manila",
         SCHEDULER_ENABLED: false
       })
     ).toThrow(

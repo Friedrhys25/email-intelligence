@@ -7,6 +7,7 @@ export interface ScheduledDigestJob {
 export interface SchedulerConfig {
   cronExpression: string;
   enabled: boolean;
+  timezone: string;
 }
 
 export interface ScheduledTaskHandle {
@@ -16,7 +17,11 @@ export interface ScheduledTaskHandle {
 
 export interface CronScheduler {
   validate(cronExpression: string): boolean;
-  schedule(cronExpression: string, task: () => void | Promise<void>): ScheduledTaskHandle;
+  schedule(
+    cronExpression: string,
+    task: () => void | Promise<void>,
+    timezone: string
+  ): ScheduledTaskHandle;
 }
 
 export interface SchedulerRunResult {

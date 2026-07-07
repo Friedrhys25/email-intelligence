@@ -6,9 +6,12 @@ Use a Render web service if the app exposes Express routes and an internal sched
 
 ## Build
 
-- Build command: `npm install && npm run build`
+- Build command: `npm ci && npm run build`
 - Start command: `npm start`
 - Health check path: `/health`
+- Root directory: `email-intelligence`
+
+If deploying with the included Render Blueprint, use `render.yaml` from the repository root. It configures the root directory, build command, start command, health check path, and non-secret defaults.
 
 ## Environment Variables
 
@@ -20,19 +23,22 @@ Use a Render web service if the app exposes Express routes and an internal sched
 - `GOOGLE_REFRESH_TOKEN`
 - `GEMINI_API_KEY`
 - `DISCORD_WEBHOOK_URL`
-- `EMAIL_FETCH_LIMIT=5`
-- `DIGEST_CRON`
+- `EMAIL_FETCH_LIMIT=10`
+- `DIGEST_CRON=0 10,21 * * *`
+- `SCHEDULER_TIMEZONE=Asia/Manila`
+- `SCHEDULER_ENABLED=true`
 
 ## Deployment Steps
 
 1. Push the repository to GitHub.
 2. Create a Render web service from the repository.
-3. Set build and start commands.
-4. Add all environment variables.
-5. Configure `/health` as the health check path.
-6. Deploy.
-7. Confirm logs show the scheduler started.
-8. Run a manual digest or wait for the scheduled run.
+3. Set root directory to `email-intelligence`.
+4. Set build command to `npm ci && npm run build` and start command to `npm start`.
+5. Add all environment variables.
+6. Configure `/health` as the health check path.
+7. Deploy.
+8. Confirm logs show the scheduler started.
+9. Wait for the scheduled run.
 
 ## Common Issues
 

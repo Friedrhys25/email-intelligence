@@ -60,9 +60,13 @@ export class DigestFormatterService {
   private formatSummary(summary: EmailSummary): string {
     const actionText = summary.actionRequired ? "Yes" : "No";
     const deadlineText = summary.deadline ?? "Not specified";
+    const reasonText = summary.reason ?? summary.summary;
 
     return [
-      `### ${sanitizeMarkdown(summary.sender)} - ${sanitizeMarkdown(summary.subject)}`,
+      `### ${sanitizeMarkdown(summary.subject)}`,
+      `Email sender: ${sanitizeMarkdown(summary.sender)}`,
+      `Title: ${sanitizeMarkdown(summary.subject)}`,
+      `Reason: ${sanitizeMarkdown(reasonText)}`,
       `Summary: ${sanitizeMarkdown(summary.summary)}`,
       `Action Required: ${actionText}`,
       `Deadline: ${sanitizeMarkdown(deadlineText)}`,

@@ -43,6 +43,9 @@ export class PromptBuilderService {
     return [
       "Create an Inbox Intelligence digest from these processed emails.",
       "Use the provided priority, actionRequired, deadline, and reasonIncluded fields as primary signals.",
+      "For job rejection emails, set reason to the rejection reason if stated, otherwise the clearest rejection signal.",
+      "For interview schedule emails, set reason to the interview schedule details or scheduling request.",
+      "For other emails, set reason to the main reason this email matters.",
       "If an email appears low-value despite being included, omit it from summaries.",
       "Emails:",
       JSON.stringify(emails, null, 2),
