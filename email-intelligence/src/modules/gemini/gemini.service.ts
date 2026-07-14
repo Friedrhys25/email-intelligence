@@ -1,6 +1,5 @@
 import { env } from "../../config/env.js";
 import { AppError } from "../../shared/errors.js";
-import { logger } from "../../shared/logger.js";
 import { retry } from "../../shared/retry.js";
 import type { BuiltPrompt } from "../prompt-builder/prompt.types.js";
 import { GeminiRestClient, type GeminiClient } from "./gemini.client.js";
@@ -19,7 +18,7 @@ export class GeminiService {
   public constructor(
     private readonly config: GeminiServiceConfig = {
       apiKey: env.GEMINI_API_KEY,
-      model: env.GEMINI_MODEL,
+      model: "gemini-1.5-flash",
       retryAttempts: 3,
       retryDelayMs: 250
     },
@@ -50,7 +49,6 @@ export class GeminiService {
         throw new AppError("GEMINI_API_KEY is required for Gemini summaries", 500);
       }
 
-      logger.info({ model: this.config.model }, "Initializing Gemini client");
       this.geminiClient = new GeminiRestClient({
         apiKey: this.config.apiKey,
         model: this.config.model

@@ -11,7 +11,6 @@ describe("loadEnv", () => {
     expect(result.EMAIL_FETCH_LIMIT).toBe(10);
     expect(result.DIGEST_CRON).toBe("0 10,21 * * *");
     expect(result.SCHEDULER_TIMEZONE).toBe("Asia/Manila");
-    expect(result.GEMINI_MODEL).toBe("gemini-flash-latest");
   });
 
   it("rejects invalid URLs for future external integrations", () => {

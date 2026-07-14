@@ -22,7 +22,6 @@ const envSchema = z
     GOOGLE_REDIRECT_URI: z.string().url().optional(),
     GOOGLE_REFRESH_TOKEN: z.string().optional(),
     GEMINI_API_KEY: z.string().optional(),
-    GEMINI_MODEL: z.string().default("gemini-flash-latest"),
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
     MANUAL_RUN_TOKEN: z.string().optional(),
     EMAIL_FETCH_LIMIT: z.coerce.number().int().positive().default(10),
