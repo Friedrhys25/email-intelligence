@@ -2,7 +2,6 @@ export interface RetryOptions {
   attempts: number;
   delayMs: number;
   shouldRetry?: (error: unknown) => boolean;
-  getDelayMs?: (error: unknown, attempt: number) => number | undefined;
 }
 
 const delay = async (milliseconds: number): Promise<void> => {
@@ -13,7 +12,7 @@ const delay = async (milliseconds: number): Promise<void> => {
 
 export const retry = async <T>(
   operation: () => Promise<T>,
-  { attempts, delayMs, shouldRetry = () => true, getDelayMs }: RetryOptions
+  { attempts, delayMs, shouldRetry = () => true }: RetryOptions
 ): Promise<T> => {
   let lastError: unknown;
 
@@ -27,7 +26,7 @@ export const retry = async <T>(
         break;
       }
 
-      await delay(getDelayMs?.(error, attempt) ?? delayMs);
+      await delay(delayMs);
     }
   }
 
