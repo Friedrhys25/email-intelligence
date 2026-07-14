@@ -1,5 +1,4 @@
 import { env } from "../../config/env.js";
-import { z } from "zod";
 import { AppError } from "../../shared/errors.js";
 import { logger } from "../../shared/logger.js";
 import { retry } from "../../shared/retry.js";
@@ -66,22 +65,7 @@ export class GeminiService {
       const parsedResponse = JSON.parse(stripJsonCodeFence(responseText)) as unknown;
       return summaryResponseSchema.parse(parsedResponse);
     } catch (error) {
-      const details =
-        error instanceof z.ZodError
-          ? error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`).join("; ")
-          : error instanceof Error
-            ? error.message
-            : "Unknown parse error";
-
-      logger.warn(
-        {
-          details,
-          responsePreview: responseText.slice(0, 500)
-        },
-        "Gemini returned an invalid summary response"
-      );
-
-      throw new AppError(`Gemini returned an invalid summary response: ${details}`, 502, true, {
+      throw new AppError("Gemini returned an invalid summary response", 502, true, {
         cause: error
       });
     }
