@@ -32,5 +32,3 @@ services:
         sync: false
       - key: DISCORD_WEBHOOK_URL
         sync: false
-      - key: MANUAL_RUN_TOKEN
-        sync: false

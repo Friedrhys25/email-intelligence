@@ -3,12 +3,10 @@ import { pinoHttp } from "pino-http";
 import { AppError } from "./shared/errors.js";
 import { logger } from "./shared/logger.js";
 import { createAuthRouter } from "./routes/auth.routes.js";
-import { createDigestRouter } from "./routes/digest.routes.js";
 import { createGmailRouter } from "./routes/gmail.routes.js";
 import { createHealthRouter } from "./routes/health.routes.js";
-import { SchedulerService } from "./modules/scheduler/scheduler.service.js";
 
-export const createApp = (scheduler = new SchedulerService()): Express => {
+export const createApp = (): Express => {
   const app = express();
 
   app.disable("x-powered-by");
@@ -20,7 +18,6 @@ export const createApp = (scheduler = new SchedulerService()): Express => {
   );
 
   app.use(createAuthRouter());
-  app.use(createDigestRouter(scheduler));
   app.use(createGmailRouter());
   app.use(createHealthRouter());
 
