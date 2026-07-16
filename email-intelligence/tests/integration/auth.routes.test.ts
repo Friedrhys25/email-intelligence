@@ -30,7 +30,8 @@ describe("authentication routes", () => {
       provider: "google",
       scope: "gmail.readonly",
       hasRefreshToken: true,
-      refreshTokenStored: true
+      refreshTokenStored: true,
+      refreshToken: "refresh-token"
     });
 
     const response = await request(createApp()).get("/auth/google/callback?code=abc").expect(200);

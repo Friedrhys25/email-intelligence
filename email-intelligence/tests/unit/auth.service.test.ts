@@ -70,7 +70,7 @@ describe("AuthService", () => {
     } satisfies Partial<AppError>);
   });
 
-  it("exchanges callback codes without returning raw tokens", async () => {
+  it("exchanges callback codes and stores the refresh token", async () => {
     const oauthClient = createOAuthClient();
     const service = new AuthService(oauthClient.client, oauthClient.refreshTokenStore);
 
@@ -79,7 +79,8 @@ describe("AuthService", () => {
       provider: "google",
       scope: "gmail.readonly",
       hasRefreshToken: true,
-      refreshTokenStored: true
+      refreshTokenStored: true,
+      refreshToken: "refresh-token"
     });
 
     expect(oauthClient.exchangeCode).toHaveBeenCalledWith("auth-code");
@@ -103,6 +104,7 @@ describe("loadAuthConfig", () => {
         NODE_ENV: "development",
         PORT: 3000,
         LOG_LEVEL: "info",
+        EXPOSE_REFRESH_TOKEN_ON_CALLBACK: false,
         EMAIL_FETCH_LIMIT: 10,
         DIGEST_CRON: "0 10,21 * * *",
         SCHEDULER_TIMEZONE: "Asia/Manila",

@@ -15,6 +15,7 @@ export interface TokenExchangeResult {
   scope: "gmail.readonly";
   hasRefreshToken: boolean;
   refreshTokenStored: boolean;
+  refreshToken?: string;
 }
 
 export interface AccessTokenResult {

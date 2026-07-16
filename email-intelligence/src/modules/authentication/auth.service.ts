@@ -43,7 +43,8 @@ export class AuthService {
       provider: "google",
       scope: "gmail.readonly",
       hasRefreshToken,
-      refreshTokenStored
+      refreshTokenStored,
+      refreshToken: tokenResult.refreshToken
     };
   }
 

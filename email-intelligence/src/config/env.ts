@@ -23,6 +23,10 @@ const envSchema = z
     GOOGLE_REFRESH_TOKEN: z.string().optional(),
     GEMINI_API_KEY: z.string().optional(),
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
+    EXPOSE_REFRESH_TOKEN_ON_CALLBACK: z
+      .enum(["true", "false"])
+      .default("false")
+      .transform((value) => value === "true"),
     EMAIL_FETCH_LIMIT: z.coerce.number().int().positive().default(10),
     DIGEST_CRON: z.string().default("0 10,21 * * *"),
     SCHEDULER_TIMEZONE: z.string().default("Asia/Manila"),
