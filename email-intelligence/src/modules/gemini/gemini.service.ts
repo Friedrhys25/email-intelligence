@@ -18,7 +18,7 @@ export class GeminiService {
   public constructor(
     private readonly config: GeminiServiceConfig = {
       apiKey: env.GEMINI_API_KEY,
-      model: "gemini-1.5-flash",
+      model: env.GEMINI_MODEL,
       retryAttempts: 3,
       retryDelayMs: 250
     },

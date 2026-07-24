@@ -8,6 +8,7 @@ describe("loadEnv", () => {
     expect(result.NODE_ENV).toBe("development");
     expect(result.PORT).toBe(3000);
     expect(result.LOG_LEVEL).toBe("info");
+    expect(result.GEMINI_MODEL).toBe("gemini-3.5-flash");
     expect(result.EMAIL_FETCH_LIMIT).toBe(10);
     expect(result.DIGEST_CRON).toBe("0 10,21 * * *");
     expect(result.SCHEDULER_TIMEZONE).toBe("Asia/Manila");

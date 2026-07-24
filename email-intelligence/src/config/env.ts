@@ -22,6 +22,7 @@ const envSchema = z
     GOOGLE_REDIRECT_URI: z.string().url().optional(),
     GOOGLE_REFRESH_TOKEN: z.string().optional(),
     GEMINI_API_KEY: z.string().optional(),
+    GEMINI_MODEL: z.string().min(1).default("gemini-3.5-flash"),
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
     EXPOSE_REFRESH_TOKEN_ON_CALLBACK: z
       .enum(["true", "false"])

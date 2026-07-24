@@ -19,7 +19,8 @@ export class AuthController {
       const result = await this.authService.handleCallback(code);
 
       if (!env.EXPOSE_REFRESH_TOKEN_ON_CALLBACK) {
-        const { refreshToken: _refreshToken, ...safeResult } = result;
+        const safeResult = { ...result };
+        delete safeResult.refreshToken;
 
         response.status(200).json(safeResult);
         return;
